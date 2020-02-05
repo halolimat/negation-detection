@@ -1,4 +1,4 @@
-from stanfordprocessor import *
+from .stanfordprocessor import *
 
 NEGATION_ADVERBS = ["no", "without", "nil","not", "n't", "never", "none", "neith", "nor", "non"]
 NEGATION_VERBS = ["deny", "reject", "refuse", "subside", "retract", "non"]
@@ -130,7 +130,7 @@ def preprocess(sentence, keyword):
 			sentence = sentence[0: sentence.rindex('-----')]
 			while sentence.endswith('-'):
 				sentence = sentence[0:len(sentence)-1]
-	except Exception:
+	except Exception as e:
 		pass
 	
 	# break into periods followed by an english word
