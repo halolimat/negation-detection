@@ -23,8 +23,8 @@ try:
 		else:
 			USECACHE = True
 	CORENLP_JARS_DIR = data['corenlp_jars']
-except Exception:
-	print "CRITICAL ERROR: NO CORENLP JARS DIR FOUND IN SETTINGS.\nEDIT *settings.json*"
+except Exception as e:
+	print ("CRITICAL ERROR: NO CORENLP JARS DIR FOUND IN SETTINGS.\nEDIT *settings.json*")
 	raise ImportError
 
 
@@ -32,7 +32,7 @@ def emptyCache():
 	import os
 	
 	filelist = [ f for f in os.listdir(CACHEDIR) ]
-	print "removed", len(filelist), "files"
+	print ("removed", len(filelist), "files")
 	for f in filelist:
 		os.remove(CACHEDIR + f)
 	return
