@@ -41,7 +41,7 @@ def _lemma_(token):
 def isNegationWord(token):
 	import nltk
 	if not isinstance(token, nltk.tree.ParentedTree):
-		print "something went terribly wrong with", token
+		print ("something went terribly wrong with", token)
 		return None
 	if (token.label().startswith("V")) or (token.label().startswith("J")):
 		word = token[0]
@@ -424,7 +424,7 @@ def predictExpression(sentence, expression, asBoolean=True):
 	if len(tokens)==0:
 		return None
 	rs = []
-	print tokens
+	print (tokens)
 	for token in tokens:
 		tmp = not isNegated(token, word[-1])
 		rs.append(tmp)
