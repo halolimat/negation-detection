@@ -1,5 +1,5 @@
 {
-	"CACHEDIR": "/Users/hussein.alolimat/work/codes/MMM/negation_detection/Cache/",
-	"corenlp_jars": "/Users/hussein.alolimat/work/codes/MMM/stanford-corenlp-full-2018-10-05/",
+	"CACHEDIR": "abs dir to cache folder",
+	"corenlp_jars": "abs dir to CoreNLP",
 	"USECACHE": "True"
 }
