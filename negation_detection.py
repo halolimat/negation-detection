@@ -13,8 +13,6 @@ def _lemma_(token):
 
 	if isinstance(token, str):
 		return _stem_(token)
-	if isinstance(token, unicode):
-		return _stem_(token)
 	from nltk.corpus import wordnet
 
 	def get_wordnet_pos(treebank_tag):
@@ -45,14 +43,14 @@ def isNegationWord(token):
 		return None
 	if (token.label().startswith("V")) or (token.label().startswith("J")):
 		word = token[0]
-		if not isinstance(word, unicode):
+		if not isinstance(word, str):
 			return False
 		word = word.lower()
 		word = _stem_(word)
 		stemmed_negation_verbs = [_stem_(verb) for verb in NEGATION_VERBS]
 		return word in stemmed_negation_verbs
 	word = token[0]
-	if not isinstance(word, unicode):
+	if not isinstance(word, str):
 		return False
 	word = word.lower()
 	word = _stem_(word)
@@ -132,9 +130,12 @@ def preprocess(sentence, keyword):
 				sentence = sentence[0:len(sentence)-1]
 	except Exception as e:
 		pass
-	
+
 	# break into periods followed by an english word
-	sentences = breakWithOutWhiteSpace(sentence)
+	# sentences = breakWithOutWhiteSpace(sentence)
+
+	# NOTE: Since we are passing sentences instead of paragraphs, I am hard coding this. In the future this should be changed.
+	sentences = None
 
 	# now do the actual chunking
 	# return sentence
@@ -144,8 +145,9 @@ def preprocess(sentence, keyword):
 		tmp = [sentence]
 
 	sentences = []
+
 	for s in tmp:
-		rs = proc.parse_doc(s)
+		rs = proc.parse_doc(s) # This contains the dict output of the CoreNLP pipeline from the wrapper, which can be replaced.
 		for e in rs['sentences']:
 			newS = ""
 			lastI = 0
@@ -208,12 +210,12 @@ def getLeaves(ptree):
 	rs = []
 	if isinstance(ptree, nltk.tree.ParentedTree):
 		if len(ptree)>0:
-			if  isinstance(ptree[0], unicode):
+			if isinstance(ptree[0], str):
 				rs.append(ptree)
 	for node in ptree:
 		if isinstance(node, nltk.tree.ParentedTree):
 			if len(node)>0:
-				if  isinstance(node[0], unicode):
+				if isinstance(node[0], str):
 					rs.append(node)
 				else:
 					rs.extend(getLeaves(node))
@@ -236,7 +238,7 @@ def reRoot(token, keyword):
 
 
 		node = node.parent()
-	
+
 	leaves = getLeaves(node)
 	sentence = " ".join([t[0] for t in leaves])
 	tokens = findSentencePTreeToken(sentence, keyword)
@@ -424,7 +426,6 @@ def predictExpression(sentence, expression, asBoolean=True):
 	if len(tokens)==0:
 		return None
 	rs = []
-	print (tokens)
 	for token in tokens:
 		tmp = not isNegated(token, word[-1])
 		rs.append(tmp)

@@ -30,7 +30,7 @@ except Exception as e:
 
 def emptyCache():
 	import os
-	
+
 	filelist = [ f for f in os.listdir(CACHEDIR) ]
 	print ("removed", len(filelist), "files")
 	for f in filelist:
@@ -40,7 +40,7 @@ def emptyCache():
 def getProcessor():
 	from stanford_corenlp_pywrapper import CoreNLP
 	class Processor(CoreNLP, object):
-		
+
 		def __init__(self):
 			global CACHEDIR
 			CoreNLP.__init__(self, "parse", corenlp_jars=[CORENLP_JARS_DIR + "*"])
@@ -49,7 +49,7 @@ def getProcessor():
 		def fetchFromCache(self, st):
 			fname = hashlib.sha224(st.encode('utf-8')).hexdigest()
 			if os.path.isfile(CACHEDIR + fname + ".pickle"):
-				rs = pickle.load(open(CACHEDIR + fname + ".pickle", "r"))
+				rs = pickle.load(open(CACHEDIR + fname + ".pickle", "rb"))
 				return rs
 			else:
 				return None
@@ -63,11 +63,12 @@ def getProcessor():
 				try:
 					rs = super(Processor, self).parse_doc(st)
 				except:
+					raise "There is somethings wrong with PyWrapper's sockwrap script."
 					return None
 				fname = hashlib.sha224(st.encode('utf-8')).hexdigest()
 				import pickle
 				if USECACHE:
-					pickle.dump(rs, open(CACHEDIR + fname + ".pickle", "w"))
+					pickle.dump(rs, open(CACHEDIR + fname + ".pickle", "wb"))
 				return rs
 			else:
 				return tmp
